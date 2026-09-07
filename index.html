@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChocoMint Food Shop</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f0fff8;
+  color: #25483b;
+}
+
+header {
+  background: #b8ead8;
+  text-align: center;
+  padding: 25px 10px;
+}
+
+h1 {
+  margin: 0;
+  color: #175b48;
+}
+
+.subtitle {
+  margin-top: 8px;
+}
+
+.menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  padding: 25px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.food {
+  background: white;
+  border-radius: 18px;
+  padding: 18px;
+  text-align: center;
+  box-shadow: 0 4px 12px #0002;
+}
+
+.food .emoji {
+  font-size: 55px;
+}
+
+.food h2 {
+  margin: 10px 0 5px;
+}
+
+.price {
+  font-weight: bold;
+  color: #15966e;
+  margin: 8px;
+}
+
+button {
+  border: none;
+  border-radius: 12px;
+  padding: 10px 16px;
+  background: #39b88a;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #278f6c;
+}
+
+.cart {
+  background: white;
+  max-width: 700px;
+  margin: 10px auto 30px;
+  padding: 22px;
+  border-radius: 18px;
+  box-shadow: 0 4px 12px #0002;
+}
+
+#cartItems {
+  margin: 15px 0;
+}
+
+.order-form input,
+.order-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 7px 0;
+  padding: 12px;
+  border: 1px solid #b8d8cc;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+.total {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 15px 0;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🍫🌿 ChocoMint Food Shop</h1>
+  <div class="subtitle">Delicious food, happy moments! 💚</div>
+</header>
+
+<div class="menu">
+
+  <div class="food">
+    <div class="emoji">🍫</div>
+    <h2>Chocolate Cake</h2>
+    <div class="price">35.000đ</div>
+    <button onclick="addToCart('Chocolate Cake',35000)">Thêm vào giỏ 🛒</button>
+  </div>
+
+  <div class="food">
+    <div class="emoji">🍪</div>
+    <h2>Chocolate Cookie</h2>
+    <div class="price">20.000đ</div>
+    <button onclick="addToCart('Chocolate Cookie',20000)">Thêm vào giỏ 🛒</button>
+  </div>
+
+  <div class="food">
+    <div class="emoji">🧋</div>
+    <h2>Mint Milk Tea</h2>
+    <div class="price">30.000đ</div>
+    <button onclick="addToCart('Mint Milk Tea',30000)">Thêm vào giỏ 🛒</button>
+  </div>
+
+  <div class="food">
+    <div class="emoji">🍓</div>
+    <h2>Strawberry Cup</h2>
+    <div class="price">25.000đ</div>
+    <button onclick="addToCart('Strawberry Cup',25000)">Thêm vào giỏ 🛒</button>
+  </div>
+
+</div>
+
+<div class="cart">
+  <h2>🛒 Giỏ hàng</h2>
+
+  <div id="cartItems">Chưa có món nào.</div>
+
+  <div class="total">
+    Tổng: <span id="total">0</span>đ
+  </div>
+
+  <h2>📦 Đặt món</h2>
+
+  <div class="order-form">
+    <input id="name" placeholder="Tên của bạn">
+    <input id="phone" placeholder="Số điện thoại">
+    <textarea id="address" placeholder="Địa chỉ nhận hàng"></textarea>
+
+    <button onclick="placeOrder()">Đặt món 💚</button>
+  </div>
+</div>
+
+<script>
+let cart = [];
+
+function addToCart(name, price) {
+  cart.push({name: name, price: price});
+  showCart();
+}
+
+function showCart() {
+  let box = document.getElementById("cartItems");
+
+  if (cart.length === 0) {
+    box.innerHTML = "Chưa có món nào.";
+    document.getElementById("total").innerText = "0";
+    return;
+  }
+
+  let html = "";
+
+  cart.forEach((item, index) => {
+    html += `
+      <div style="margin:8px 0">
+        ${item.name} - ${item.price.toLocaleString()}đ
+        <button onclick="removeItem(${index})">Xóa</button>
+      </div>
+    `;
+  });
+
+  box.innerHTML = html;
+
+  let total = cart.reduce((sum, item) => sum + item.price, 0);
+  document.getElementById("total").innerText = total.toLocaleString();
+}
+
+function removeItem(index) {
+  cart.splice(index, 1);
+  showCart();
+}
+
+function placeOrder() {
+  if (cart.length === 0) {
+    alert("Bạn chưa chọn món nào! 🍫");
+    return;
+  }
+
+  let name = document.getElementById("name").value;
+  let phone = document.getElementById("phone").value;
+  let address = document.getElementById("address").value;
+
+  if (!name || !phone || !address) {
+    alert("Hãy điền đầy đủ thông tin đặt món nhé! 💚");
+    return;
+  }
+
+  alert(
+    "🎉 Đặt món thành công!\\n\\n" +
+    "Cảm ơn " + name + " đã đặt món tại ChocoMint Food Shop! 🍫🌿"
+  );
+}
+</script>
+
+</body>
+</html>
